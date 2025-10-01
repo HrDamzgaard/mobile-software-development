@@ -31,17 +31,6 @@ type Car = {
   image: string;
 }
 
-type HeaderComponentProps = {
-  title: string;
-  view?: string;
-};
-
-type ParamList = {
-  Detail: {
-    openDrawer: void;
-  };
-};
-
 
 const HomeScreen: React.FC = () => {
   const [cars, setCars] = useState<Car[]>([]);
