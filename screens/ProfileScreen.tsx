@@ -14,6 +14,21 @@ const ProfileScreen = () => {
 }
 
 
+const ProfileHeader = () => {
+  return(
+    <View style={headerStyles.container}>
+      <Image 
+        source={require("../assets/images/profilepictures/yaris.png")} 
+        style={{width: 200, height: 200, borderRadius: 100, marginTop: 20}}
+        />
+      <View style={headerStyles.button}>
+        <Button title="Log Out" onPress={() => {}} />
+      </View>
+    </View>
+    
+  );
+}
+
 
 // Yoinked from Mathias
 const RentedCars: React.FC = () => {
@@ -30,28 +45,18 @@ const RentedCars: React.FC = () => {
       </View>
   );
   return (
+    <View style={listStyles.outerContainer}>
       <FlatList
           data={cars}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={listStyles.container}/>
+          contentContainerStyle={listStyles.container}
+          style={{flex: 1}}/>
+    </View>
   )
 };
 
-const ProfileHeader = () => {
-  return(
-    <View style={headerStyles.container}>
-      <Image 
-        source={require("../assets/images/profilepictures/yaris.png")} 
-        style={{width: 200, height: 200, borderRadius: 100, marginTop: 20}}
-        />
-      <View style={headerStyles.button}>
-        <Button title="Log Out" onPress={() => {}} />
-      </View>
-    </View>
-    
-  );
-}
+
 type Car = {
   id: string;
   name: string;
@@ -152,18 +157,31 @@ const cars: Car[] = [
   });
 
   const listStyles = StyleSheet.create({
+    outerContainer: {
+      width: screenwidth * 0.92,
+      height: screenwidth * 1.2,
+      alignSelf: 'center',
+      borderWidth: 1,
+      borderColor: '#ccc',
+      borderRadius: 12,
+      overflow: 'hidden',
+      marginTop: 10,
+      backgroundColor: '#464444ff',
+  },
     container: {
     paddingVertical: 10,
+    paddingHorizontal: 5,
+    
   },
   card: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
+    backgroundColor: '#a19f9fff',
     marginVertical: 8,
     marginHorizontal: 10,
     borderRadius: 8,
     overflow: 'hidden',
     elevation: 2,
-    width: screenwidth - 20,
+
   },
   image: {
     width: 100,
