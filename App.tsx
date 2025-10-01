@@ -1,10 +1,23 @@
 import { StatusBar } from 'expo-status-bar';
-import {FlatList, StyleSheet, Text, View, Dimensions, Image, Linking, TouchableOpacity} from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  Image,
+  Linking,
+  TouchableOpacity,
+  Platform,
+  ActivityIndicator
+} from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {SafeAreaView} from "react-native";
+import {useEffect, useState} from "react";
 
 export default function App() {
-  return (<
-      HomeScreen></HomeScreen>
+  return (
+      <HomeScreen></HomeScreen>
   );
 }
 
@@ -14,83 +27,9 @@ type Car = {
   model: string;
   location: string;
   price: string;
-  listingdate: string;
-  image: Image;
+  listingDate: string;
+  image: string;
 }
-
-const cars: Car[] = [
-    {
-  id: '1',
-  name: 'Car1',
-  model: 'BMW',
-  location: 'Copenhagen',
-  price: '1000',
-  listingdate: '01-01-2025',
-  image: require('./assets/icon.png')
-},
-  {
-    id: '2',
-    name: 'Car2',
-    model: 'Ferrari',
-    location: 'Odense',
-    price: '1200',
-    listingdate: '03-07-2025',
-    image: require('./assets/icon.png')
-  },
-  {
-    id: '3',
-    name: 'Car3',
-    model: 'BMW',
-    location: 'Copenhagen',
-    price: '1000',
-    listingdate: '01-01-2025',
-    image: require('./assets/icon.png')
-  },
-  {
-    id: '4',
-    name: 'Car4',
-    model: 'Ferrari',
-    location: 'Odense',
-    price: '1200',
-    listingdate: '03-07-2025',
-    image: require('./assets/icon.png')
-  },
-  {
-    id: '5',
-    name: 'Car5',
-    model: 'BMW',
-    location: 'Copenhagen',
-    price: '1000',
-    listingdate: '01-01-2025',
-    image: require('./assets/icon.png')
-  },
-  {
-    id: '6',
-    name: 'Car6',
-    model: 'Ferrari',
-    location: 'Odense',
-    price: '1200',
-    listingdate: '03-07-2025',
-    image: require('./assets/icon.png')
-  },
-  {
-    id: '7',
-    name: 'Car7',
-    model: 'BMW',
-    location: 'Copenhagen',
-    price: '1000',
-    listingdate: '01-01-2025',
-    image: require('./assets/icon.png')
-  },
-  {
-    id: '8',
-    name: 'Car8',
-    model: 'Ferrari',
-    location: 'Odense',
-    price: '1200',
-    listingdate: '03-07-2025',
-    image: require('./assets/icon.png')
-  },]
 
 type HeaderComponentProps = {
   title: string;
@@ -105,29 +44,71 @@ type ParamList = {
 
 
 const HomeScreen: React.FC = () => {
+  const [cars, setCars] = useState<Car[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const getCars = async () => {
+      try {
+        const responseCars = await fetch('http://10.0.2.2:8080/api/cars');
+        const data = await responseCars.json();
+        setCars(data);
+      } catch (error) {
+        console.error('Cannot get cars from endpoint')
+      } finally {
+        setLoading(false);
+      }
+    };
+    getCars();
+  }, []);
+
   const renderItem = ({item}: {item: Car}) => (
         <View style={styles.card}>
-        <Image source={require('./assets/icon.png')} style={styles.image}/>
+        <Image source={{uri: item.image}} style={styles.image}/>
         <View style={styles.info}>
           <Text style={styles.name}>{item.name}</Text>
           <Text style={styles.model}>{item.model}</Text>
           <Text style={styles.location}>{item.location}</Text>
           <Text style={styles.price}>{item.price}</Text>
-          <Text style={styles.listingdate}>{item.listingdate}</Text>
+          <Text style={styles.listingDate}>{item.listingDate}</Text>
         </View>
       </View>
   );
+  if (loading) {
+    return (
+        <SafeAreaView style={[styles.containerScreen,
+          {alignItems: 'center', justifyContent: 'center'}]}>
+          <ActivityIndicator size="large" color="lightgrey"></ActivityIndicator>
+        </SafeAreaView>
+    )
+  }
   return (
-      <FlatList
-          data={cars}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.container}/>
+        <SafeAreaView style={styles.containerScreen}>
+          <View>
+            <View style={styles.headerBar}>
+              <Ionicons name="home" size={32} color="white"/>
+            </View>
+          <FlatList
+              data={cars}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.id}
+              contentContainerStyle={styles.container}/>
+          </View>
+        </SafeAreaView>
   )
 };
-const screenwidth = Dimensions.get('window').width;
+const screenWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
+  containerScreen: {
+    paddingTop: 52
+  },
+  headerBar: {
+    backgroundColor: "lightblue",
+    height: 70,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   container: {
     paddingVertical: 10,
   },
@@ -139,7 +120,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     overflow: 'hidden',
     elevation: 2,
-    width: screenwidth - 20,
+    width: screenWidth - 20,
   },
   image: {
     width: 100,
@@ -166,7 +147,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#555',
   },
-  listingdate: {
+  listingDate: {
     fontSize: 14,
     color: '#555',
   },
