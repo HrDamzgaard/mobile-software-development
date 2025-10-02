@@ -51,6 +51,21 @@ const HomeScreen: React.FC = () => {
     getCars();
   }, []);
 
+  useEffect(() => {
+    const rentCar = async () => {
+      try {
+        const responseRent = await fetch('http://10.0.2.2:8080/api/rent/1', {method: 'PUT'});
+        const data = responseRent.json;
+        console.log(data.toString())
+      } catch (error) {
+        console.error('Cannot rent car 1 from endpoint.')
+      } finally {
+        setLoading(false);
+      }
+    };
+    rentCar();
+  }, []);
+
   const renderItem = ({item}: {item: Car}) => (
         <View style={styles.card}>
         <Image source={{uri: item.image}} style={styles.image}/>
@@ -65,8 +80,7 @@ const HomeScreen: React.FC = () => {
   );
   if (loading) {
     return (
-        <SafeAreaView style={[styles.containerScreen,
-          {alignItems: 'center', justifyContent: 'center'}]}>
+        <SafeAreaView style={[styles.containerScreen, {alignItems: 'center', justifyContent: 'center'}]}>
           <ActivityIndicator size="large" color="lightgrey"></ActivityIndicator>
         </SafeAreaView>
     )
@@ -75,7 +89,12 @@ const HomeScreen: React.FC = () => {
         <SafeAreaView style={styles.containerScreen}>
           <View>
             <View style={styles.headerBar}>
+              <View style={[styles.containerIcon, {justifyContent: 'flex-start',flexDirection: 'row', paddingLeft: 20 }]}>
               <Ionicons name="home" size={32} color="white"/>
+              </View>
+              <View style={[styles.containerIcon, {justifyContent: 'flex-start',flexDirection: 'row', paddingRight: 20 }]}>
+                <Ionicons name="person-outline" size={32} color="white"/>
+              </View>
             </View>
           <FlatList
               data={cars}
@@ -92,11 +111,15 @@ const styles = StyleSheet.create({
   containerScreen: {
     paddingTop: 52
   },
+  containerIcon: {
+    alignItems: 'stretch',
+  },
   headerBar: {
-    backgroundColor: "lightblue",
+    backgroundColor: "#0597D5",
     height: 70,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-between",
+    flexDirection: "row",
   },
   container: {
     paddingVertical: 10,
