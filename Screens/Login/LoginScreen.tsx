@@ -1,20 +1,39 @@
 import {useNavigation} from '@react-navigation/native';
-import {Button, SafeAreaView, StyleSheet, TextInput, TouchableOpacity, View, Text} from "react-native";
+import {Button, StyleSheet, TextInput, TouchableOpacity, View, Text} from "react-native";
 import React from "react";
 import {SafeAreaProvider} from "react-native-safe-area-context";
 import { Ionicons } from '@expo/vector-icons';
 import ResetPasswordScreen from "./ResetPasswordScreen";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function LoginScreen() {
     const navigation = useNavigation();
     const [Email, SetEmail] = React.useState('');
     const [Password, SetPassword] = React.useState('');
     const onResetPressed = () => {navigation.navigate("ResetPasswordScreen");};
-    const onProfile = () => {navigation.navigate("ProfileScreen");};
+    const onHome = () => {navigation.navigate("HomeScreen");};
+
+
+    const checkLogin = async() => {
+        try{
+
+            const userData = await AsyncStorage.getItem("userData");
+            const parsedData = JSON.parse(userData);
+            if(parsedData?.Email == Email && parsedData.Password == Password){
+                await AsyncStorage.setItem("loginData",userData);
+                onHome();
+            }
+            else{
+                console.error("Account does not exist:")
+            }
+        }
+        catch (e) {
+            console.error("Error");
+        } };
+
 
         return (
             <SafeAreaProvider>
-                <SafeAreaView>
                     <View style={styles.inputContainer}>
                         <Ionicons name="mail-outline" size={20} color="black" style={styles.icon} />
                         <TextInput
@@ -42,11 +61,10 @@ export default function LoginScreen() {
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.button}
-                        onPress={() => onProfile()}
+                        onPress={() => checkLogin()}
                     >
                         <Text style={styles.buttonText}>Login</Text>
                     </TouchableOpacity>
-                </SafeAreaView>
             </SafeAreaProvider>
     );
 }
@@ -73,7 +91,9 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     button: {
-        backgroundColor: "#1E90FF",
+        backgroundColor: "#fff",
+        borderColor: "#000",
+        borderWidth: 1,
         alignSelf: "center",
         justifyContent: "center",
         borderRadius: 8,
@@ -84,7 +104,7 @@ const styles = StyleSheet.create({
 
     },
     buttonText: {
-        color: "#fff",
+        color: "#000",
         fontSize: 24,
         alignSelf: "center",
     },

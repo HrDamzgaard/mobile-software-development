@@ -2,10 +2,10 @@ import {Text} from "react-native";
 import React from "react";
 
 
-export default function ProfileScreen() {
+export default function HomeScreen() {
 
 return(
-    <Text>Profile Page</Text>
+    <Text>Home Page</Text>
 
 );
 

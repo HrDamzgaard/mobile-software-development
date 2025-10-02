@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import {Button, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {Button, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import React from "react";
 import {SafeAreaProvider} from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -45,12 +45,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         width: "90%",
         height: 50,
-        marginTop: 20,
+        marginTop: 40,
         borderWidth: 1,
         borderColor: '#000'
     },
     button: {
-        backgroundColor: "#1E90FF",
+        backgroundColor: "#fff",
+        borderColor: "#000",
+        borderWidth: 1,
         alignSelf: "center",
         alignItems: "center",
         justifyContent: "center",
@@ -60,9 +62,10 @@ const styles = StyleSheet.create({
         width: "60%",
         height: 50,
         marginRight: 20,
+        marginTop: 40,
     },
     buttonText: {
-        color: "#fff",
+        color: "#000",
         fontSize: 24,
         alignSelf: "center",
     },

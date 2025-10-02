@@ -1,44 +1,60 @@
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {Button, SafeAreaView, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {Button, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {SafeAreaProvider} from "react-native-safe-area-context";
 import {StyleSheet} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import AntDesign from '@expo/vector-icons/AntDesign';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
-export default function CreateScreen() {
+export default function CreateAccountScreen() {
         const navigation = useNavigation();
         const [Name, SetName] = React.useState('');
         const [Email, SetEmail] = React.useState('');
         const [Number, SetNumber] = React.useState('');
         const [Password, SetPassword] = React.useState('');
-        const onProfile = () => {navigation.navigate("ProfileScreen");};
-
-        //IMG
-    const [image, setImage] = useState<string | null>(null);
+        const [image, setImage] = useState<string | null>(null);
+        const onHome = () => {navigation.navigate("HomeScreen");};
 
     const pickImage = async () => {
-        // No permissions request is necessary for launching the image library
         let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ['images', 'videos'],
+            mediaTypes: ['images'],
             allowsEditing: true,
-            aspect: [4, 3],
+            aspect: [3, 2],
             quality: 1,
         });
-
-        console.log(result);
 
         if (!result.canceled) {
             setImage(result.assets[0].uri);
         }
     };
-    //
+
+
+    const storeAccount = async() => {
+        try{
+            const userData = { Name, Email, Number, Password, image };
+            if(userData.Name != null && userData.Email != null && userData.Number != null && userData.Password != null && userData.image != null){
+                await AsyncStorage.setItem("userData", JSON.stringify(userData));
+                console.log("Saved: ", userData);
+                console.log(await AsyncStorage.getItem("userData"));
+                onHome();
+            }
+            else{
+                console.error("Fill in all fields")
+            }
+
+    }
+    catch (e) {
+            console.error("Error creating account:", e);
+        } };
+
+
 
         return (
             <SafeAreaProvider>
-                <SafeAreaView>
                     <View style={styles.inputContainer}>
                         <Ionicons  name="person" size={20} color="black" style={styles.icon} />
                         <TextInput
@@ -58,7 +74,7 @@ export default function CreateScreen() {
                         />
                     </View>
                     <View style={styles.inputContainer}>
-                        <Ionicons  name="phone-portrait" size={20} color="black" style={styles.icon} />
+                        <AntDesign  name="phone" size={20} color="black" style={styles.icon} />
                         <TextInput
                             placeholder="Phone number"
                             keyboardType="phone-pad"
@@ -77,7 +93,6 @@ export default function CreateScreen() {
                             value={Password}
                         />
                     </View>
-                </SafeAreaView>
                 <View style={stylesImg.wrapper}>
                     <Text style={stylesImg.Text}>Profile Picture:</Text>
                     <TouchableOpacity onPress={pickImage} style={stylesImg.container}>
@@ -90,12 +105,12 @@ export default function CreateScreen() {
                 </View>
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={() => onProfile()}
-                >
+                    onPress={() =>
+                        storeAccount()
+                        }>
                     <Text style={styles.buttonText}>Create Account</Text>
                 </TouchableOpacity>
             </SafeAreaProvider>
-
         );
 }
 
@@ -121,7 +136,9 @@ export default function CreateScreen() {
             marginRight: 8,
         },
         button: {
-            backgroundColor: "#1E90FF",
+            backgroundColor: "#fff",
+            borderColor: "#000",
+            borderWidth: 1,
             alignSelf: "flex-end",
             alignItems: "center",
             justifyContent: "center",
@@ -133,7 +150,7 @@ export default function CreateScreen() {
             marginRight: 20,
         },
         buttonText: {
-            color: "#fff",
+            color: "#000",
             fontSize: 24,
             alignSelf: "center",
         },
@@ -153,7 +170,7 @@ export default function CreateScreen() {
             width:125,
             height:125,
             backgroundColor:'#fff',
-            borderRadius:50,
+            borderRadius:90,
             overflow: "hidden",
             alignSelf: "flex-start",
         },
