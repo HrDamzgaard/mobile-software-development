@@ -55,7 +55,7 @@ const HomeScreen: React.FC = () => {
     const rentCar = async () => {
       try {
         const responseRent = await fetch('http://10.0.2.2:8080/api/rent/1', {method: 'PUT'});
-        const data = responseRent.json;
+        const data = responseRent.json();
         console.log(data.toString())
       } catch (error) {
         console.error('Cannot rent car 1 from endpoint.')
