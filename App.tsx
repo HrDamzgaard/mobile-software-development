@@ -90,7 +90,7 @@ const HomeScreen: React.FC = () => {
           <View>
             <View style={styles.headerBar}>
               <View style={[styles.containerIcon, {justifyContent: 'flex-start',flexDirection: 'row', paddingLeft: 20 }]}>
-              <Ionicons name="home" size={32} color="white"/>
+              <Ionicons name="navicon" size={32} color="white"/>
               </View>
               <View style={[styles.containerIcon, {justifyContent: 'flex-start',flexDirection: 'row', paddingRight: 20 }]}>
                 <Ionicons name="person-outline" size={32} color="white"/>
