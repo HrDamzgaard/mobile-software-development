@@ -1,5 +1,7 @@
 import *as React from 'react';
-import { View, Text, StyleSheet, Image, FlatList, Dimensions, Button } from 'react-native';
+import { View, Text, StyleSheet, Image, FlatList, Dimensions, Button, TouchableOpacity } from 'react-native';
+import { useActionSheet } from '@expo/react-native-action-sheet';
+import * as ImagePicker from 'expo-image-picker';
 
 const screenwidth = Dimensions.get('window').width;
 
@@ -15,12 +17,73 @@ const ProfileScreen = () => {
 
 
 const ProfileHeader = () => {
+  const { showActionSheetWithOptions } = useActionSheet();
+  const [profileImageUri, setProfileImageUri] = React.useState<string | null>(null);
+
+  const pickFromLibrary = async () => {
+    const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if(!perm.granted){
+      alert("Permission to access camera roll is required!");
+      return;
+    }
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      aspect: [1,1],
+      quality: 1,
+    });
+    if(!result.canceled){
+      const uri = result.assets[0].uri;
+      setProfileImageUri(uri);
+    }
+  };
+  
+  const takePhoto = async () => {
+    const perm = await ImagePicker.requestCameraPermissionsAsync();
+    if(!perm.granted){
+      alert("Permission to access camera is required!");
+      return;
+    };
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [1,1],
+      quality: 1,
+    });
+    if(!result.canceled){
+      const uri = result.assets[0].uri;
+      setProfileImageUri(uri);
+    }
+  };
+
+  const onPressChangeProfilePicture = () => {
+    const options = ['Take Photo', 'Choose from Library', 'Cancel'];
+    const cancelButtonIndex = 2;
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+      },
+      (buttonIndex) => {
+        console.log("test");
+        if(buttonIndex === 0){
+          console.log("take photo");
+          takePhoto();
+        }else if(buttonIndex === 1){
+          console.log("pick from library");
+          pickFromLibrary();
+        }
+      }
+    );
+  };
+
   return(
     <View style={headerStyles.container}>
-      <Image 
-        source={require("../assets/images/profilepictures/yaris.png")} 
-        style={{width: 200, height: 200, borderRadius: 100, marginTop: 20}}
-        />
+      <TouchableOpacity onPress={onPressChangeProfilePicture}>
+        <Image 
+          source={profileImageUri ? {uri: profileImageUri} : require("../assets/images/profilepictures/yaris.png")}
+          style={{width: 200, height: 200, borderRadius: 100, marginTop: 20}}
+          />
+      </TouchableOpacity>
       <View style={headerStyles.button}>
         <Button title="Log Out" onPress={() => {}} />
       </View>

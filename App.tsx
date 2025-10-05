@@ -4,6 +4,7 @@ import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import {createStaticNavigation} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import ProfileScreen from './screens/ProfileScreen';
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 
 
 const RootStack = createNativeStackNavigator({
@@ -14,11 +15,13 @@ const RootStack = createNativeStackNavigator({
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <RootStack.Navigator>
-        <RootStack.Screen name="Profile" component={ProfileScreen} />
-      </RootStack.Navigator>
-    </NavigationContainer>
+    <ActionSheetProvider>
+      <NavigationContainer>
+        <RootStack.Navigator>
+          <RootStack.Screen name="Profile" component={ProfileScreen} />
+        </RootStack.Navigator>
+      </NavigationContainer>
+    </ActionSheetProvider>
   );
 }
 
