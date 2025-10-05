@@ -2,6 +2,8 @@ import *as React from 'react';
 import { View, Text, StyleSheet, Image, FlatList, Dimensions, Button, TouchableOpacity } from 'react-native';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import * as ImagePicker from 'expo-image-picker';
+import { Car } from '../types/Car';
+import { useEffect } from 'react';
 
 const screenwidth = Dimensions.get('window').width;
 
@@ -64,12 +66,9 @@ const ProfileHeader = () => {
         cancelButtonIndex,
       },
       (buttonIndex) => {
-        console.log("test");
         if(buttonIndex === 0){
-          console.log("take photo");
           takePhoto();
         }else if(buttonIndex === 1){
-          console.log("pick from library");
           pickFromLibrary();
         }
       }
@@ -92,12 +91,25 @@ const ProfileHeader = () => {
   );
 }
 
-
-// Yoinked from Mathias
 const RentedCars: React.FC = () => {
+  const [cars, setCars] = React.useState<Car[]>([]);
+
+  useEffect(() => {
+    const fetchCars = async () => {
+      try {
+        const response = await fetch('http://192.168.1.94:8080/api/cars');
+        const data = await response.json();
+        setCars(data);
+      } catch (error) {
+        console.error('Error fetching car:', error);
+      }
+    };
+    fetchCars();
+  }, []);
+
   const renderItem = ({item}: {item: Car}) => (
         <View style={listStyles.card}>
-        <Image source={require('../assets/icon.png')} style={listStyles.image}/>
+        <Image source={{uri: item.image}} style={listStyles.image}/>
         <View style={listStyles.info}>
           <Text style={listStyles.name}>{item.name}</Text>
           <Text style={listStyles.model}>{item.model}</Text>
@@ -118,95 +130,6 @@ const RentedCars: React.FC = () => {
     </View>
   )
 };
-
-
-type Car = {
-  id: string;
-  name: string;
-  model: string;
-  location: string;
-  price: string;
-  listingdate: string;
-  image: any;
-}
-
-const cars: Car[] = [
-    {
-  id: '1',
-  name: 'Car1',
-  model: 'BMW',
-  location: 'Copenhagen',
-  price: '1000',
-  listingdate: '01-01-2025',
-  image: require('../assets/icon.png')
-},
-  {
-    id: '2',
-    name: 'Car2',
-    model: 'Ferrari',
-    location: 'Odense',
-    price: '1200',
-    listingdate: '03-07-2025',
-    image: require('../assets/icon.png')
-  },
-  {
-    id: '3',
-    name: 'Car3',
-    model: 'BMW',
-    location: 'Copenhagen',
-    price: '1000',
-    listingdate: '01-01-2025',
-    image: require('../assets/icon.png')
-  },
-  {
-    id: '4',
-    name: 'Car4',
-    model: 'Ferrari',
-    location: 'Odense',
-    price: '1200',
-    listingdate: '03-07-2025',
-    image: require('../assets/icon.png')
-  },
-  {
-    id: '5',
-    name: 'Car5',
-    model: 'BMW',
-    location: 'Copenhagen',
-    price: '1000',
-    listingdate: '01-01-2025',
-    image: require('../assets/icon.png')
-  },
-  {
-    id: '6',
-    name: 'Car6',
-    model: 'Ferrari',
-    location: 'Odense',
-    price: '1200',
-    listingdate: '03-07-2025',
-    image: require('../assets/icon.png')
-  },
-  {
-    id: '7',
-    name: 'Car7',
-    model: 'BMW',
-    location: 'Copenhagen',
-    price: '1000',
-    listingdate: '01-01-2025',
-    image: require('../assets/icon.png')
-  },
-  {
-    id: '8',
-    name: 'Car8',
-    model: 'Ferrari',
-    location: 'Odense',
-    price: '1200',
-    listingdate: '03-07-2025',
-    image: require('../assets/icon.png')
-  },]
-
-
-
-
   
   const headerStyles = StyleSheet.create({
     container: {
