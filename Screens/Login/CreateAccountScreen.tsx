@@ -8,6 +8,7 @@ import { Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {useEffect} from "react";
 
 
 export default function CreateAccountScreen() {
@@ -33,24 +34,17 @@ export default function CreateAccountScreen() {
     };
 
 
-    const storeAccount = async() => {
-        try{
-            const userData = { Name, Email, Number, Password, image };
-            if(userData.Name != null && userData.Email != null && userData.Number != null && userData.Password != null && userData.image != null){
-                await AsyncStorage.setItem("userData", JSON.stringify(userData));
-                console.log("Saved: ", userData);
-                console.log(await AsyncStorage.getItem("userData"));
-                onHome();
-            }
-            else{
-                console.error("Fill in all fields")
-            }
 
-    }
-    catch (e) {
-            console.error("Error creating account:", e);
-        } };
-
+            const createAccount = async () => {
+                try {
+                    const responseUser = await fetch(`http://192.168.1.96:8080/api/users/create/${Name}/${Email}/${Password}/${Number}`,{ method: "POST" }
+                    );
+                    console.log("user saved");
+                    console.log(responseUser.url);
+                } catch (error) {
+                    console.error('Cannot save user on endpoints')
+                }
+            };
 
 
         return (
@@ -106,7 +100,7 @@ export default function CreateAccountScreen() {
                 <TouchableOpacity
                     style={styles.button}
                     onPress={() =>
-                        storeAccount()
+                        createAccount()
                         }>
                     <Text style={styles.buttonText}>Create Account</Text>
                 </TouchableOpacity>

@@ -8,7 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function LoginScreen() {
     const navigation = useNavigation();
-    const [Email, SetEmail] = React.useState('');
+    const [Name, SetName] = React.useState('');
     const [Password, SetPassword] = React.useState('');
     const onResetPressed = () => {navigation.navigate("ResetPasswordScreen");};
     const onHome = () => {navigation.navigate("HomeScreen");};
@@ -16,15 +16,15 @@ export default function LoginScreen() {
 
     const checkLogin = async() => {
         try{
-
-            const userData = await AsyncStorage.getItem("userData");
-            const parsedData = JSON.parse(userData);
-            if(parsedData?.Email == Email && parsedData.Password == Password){
-                await AsyncStorage.setItem("loginData",userData);
+            const response = await fetch(`http://192.168.1.96:8080/api/users`)
+            const users = await response.json();
+            console.log(users);
+            const matchedUser = users.find(user => user.username === Name && user.password === Password);
+            console.log(matchedUser);
+            if(matchedUser != null){
+                await AsyncStorage.setItem("userData", JSON.stringify(matchedUser));
+                console.log(await AsyncStorage.getItem("userData"));
                 onHome();
-            }
-            else{
-                console.error("Account does not exist:")
             }
         }
         catch (e) {
@@ -38,10 +38,9 @@ export default function LoginScreen() {
                         <Ionicons name="mail-outline" size={20} color="black" style={styles.icon} />
                         <TextInput
                             style={styles.input}
-                            placeholder="Email"
-                            keyboardType="email-address"
-                            onChangeText={SetEmail}
-                            value={Email}
+                            placeholder="Name"
+                            onChangeText={SetName}
+                            value={Name}
                         />
                     </View>
                     <View style={styles.inputContainer}>
