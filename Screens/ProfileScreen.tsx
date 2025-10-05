@@ -1,5 +1,9 @@
 import *as React from 'react';
-import { View, Text, StyleSheet, Image, FlatList, Dimensions, Button } from 'react-native';
+import { View, Text, StyleSheet, Image, FlatList, Dimensions, Button, TouchableOpacity } from 'react-native';
+import { useActionSheet } from '@expo/react-native-action-sheet';
+import * as ImagePicker from 'expo-image-picker';
+import { Car } from '../types/Car';
+import { useEffect } from 'react';
 
 const screenwidth = Dimensions.get('window').width;
 
@@ -15,12 +19,70 @@ const ProfileScreen = () => {
 
 
 const ProfileHeader = () => {
+  const { showActionSheetWithOptions } = useActionSheet();
+  const [profileImageUri, setProfileImageUri] = React.useState<string | null>(null);
+
+  const pickFromLibrary = async () => {
+    const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if(!perm.granted){
+      alert("Permission to access camera roll is required!");
+      return;
+    }
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      aspect: [1,1],
+      quality: 1,
+    });
+    if(!result.canceled){
+      const uri = result.assets[0].uri;
+      setProfileImageUri(uri);
+    }
+  };
+  
+  const takePhoto = async () => {
+    const perm = await ImagePicker.requestCameraPermissionsAsync();
+    if(!perm.granted){
+      alert("Permission to access camera is required!");
+      return;
+    };
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [1,1],
+      quality: 1,
+    });
+    if(!result.canceled){
+      const uri = result.assets[0].uri;
+      setProfileImageUri(uri);
+    }
+  };
+
+  const onPressChangeProfilePicture = () => {
+    const options = ['Take Photo', 'Choose from Library', 'Cancel'];
+    const cancelButtonIndex = 2;
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+      },
+      (buttonIndex) => {
+        if(buttonIndex === 0){
+          takePhoto();
+        }else if(buttonIndex === 1){
+          pickFromLibrary();
+        }
+      }
+    );
+  };
+
   return(
     <View style={headerStyles.container}>
-      <Image 
-        source={require("../assets/images/profilepictures/yaris.png")} 
-        style={{width: 200, height: 200, borderRadius: 100, marginTop: 20}}
-        />
+      <TouchableOpacity onPress={onPressChangeProfilePicture}>
+        <Image 
+          source={profileImageUri ? {uri: profileImageUri} : require("../assets/images/profilepictures/yaris.png")}
+          style={{width: 200, height: 200, borderRadius: 100, marginTop: 20}}
+          />
+      </TouchableOpacity>
       <View style={headerStyles.button}>
         <Button title="Log Out" onPress={() => {}} />
       </View>
@@ -29,12 +91,25 @@ const ProfileHeader = () => {
   );
 }
 
-
-// Yoinked from Mathias
 const RentedCars: React.FC = () => {
+  const [cars, setCars] = React.useState<Car[]>([]);
+
+  useEffect(() => {
+    const fetchCars = async () => {
+      try {
+        const response = await fetch('http://192.168.1.94:8080/api/cars');
+        const data = await response.json();
+        setCars(data);
+      } catch (error) {
+        console.error('Error fetching car:', error);
+      }
+    };
+    fetchCars();
+  }, []);
+
   const renderItem = ({item}: {item: Car}) => (
         <View style={listStyles.card}>
-        <Image source={require('../assets/icon.png')} style={listStyles.image}/>
+        <Image source={{uri: item.image}} style={listStyles.image}/>
         <View style={listStyles.info}>
           <Text style={listStyles.name}>{item.name}</Text>
           <Text style={listStyles.model}>{item.model}</Text>
@@ -55,95 +130,6 @@ const RentedCars: React.FC = () => {
     </View>
   )
 };
-
-
-type Car = {
-  id: string;
-  name: string;
-  model: string;
-  location: string;
-  price: string;
-  listingdate: string;
-  image: any;
-}
-
-const cars: Car[] = [
-    {
-  id: '1',
-  name: 'Car1',
-  model: 'BMW',
-  location: 'Copenhagen',
-  price: '1000',
-  listingdate: '01-01-2025',
-  image: require('../assets/icon.png')
-},
-  {
-    id: '2',
-    name: 'Car2',
-    model: 'Ferrari',
-    location: 'Odense',
-    price: '1200',
-    listingdate: '03-07-2025',
-    image: require('../assets/icon.png')
-  },
-  {
-    id: '3',
-    name: 'Car3',
-    model: 'BMW',
-    location: 'Copenhagen',
-    price: '1000',
-    listingdate: '01-01-2025',
-    image: require('../assets/icon.png')
-  },
-  {
-    id: '4',
-    name: 'Car4',
-    model: 'Ferrari',
-    location: 'Odense',
-    price: '1200',
-    listingdate: '03-07-2025',
-    image: require('../assets/icon.png')
-  },
-  {
-    id: '5',
-    name: 'Car5',
-    model: 'BMW',
-    location: 'Copenhagen',
-    price: '1000',
-    listingdate: '01-01-2025',
-    image: require('../assets/icon.png')
-  },
-  {
-    id: '6',
-    name: 'Car6',
-    model: 'Ferrari',
-    location: 'Odense',
-    price: '1200',
-    listingdate: '03-07-2025',
-    image: require('../assets/icon.png')
-  },
-  {
-    id: '7',
-    name: 'Car7',
-    model: 'BMW',
-    location: 'Copenhagen',
-    price: '1000',
-    listingdate: '01-01-2025',
-    image: require('../assets/icon.png')
-  },
-  {
-    id: '8',
-    name: 'Car8',
-    model: 'Ferrari',
-    location: 'Odense',
-    price: '1200',
-    listingdate: '03-07-2025',
-    image: require('../assets/icon.png')
-  },]
-
-
-
-
   
   const headerStyles = StyleSheet.create({
     container: {
