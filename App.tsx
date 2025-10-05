@@ -7,6 +7,7 @@ import CreateAccountScreen from "./Screens/Login/CreateAccountScreen";
 import LoginScreen from "./Screens/Login/LoginScreen";
 import ResetPasswordScreen from "./Screens/Login/ResetPasswordScreen";
 import HomeScreen from "./Screens/HomeScreen";
+import ProfileScreen from "./Screens/ProfileScreen";
 
 const RootStack = createNativeStackNavigator({
   screens: {
@@ -25,6 +26,9 @@ const RootStack = createNativeStackNavigator({
     HomeScreen: {
       screen: HomeScreen
     },
+    ProfileScreen: {
+      screen: ProfileScreen
+    }
   },
 });
 
