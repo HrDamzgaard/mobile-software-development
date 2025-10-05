@@ -11,7 +11,7 @@ export default function LogCreateScreen() {
     return (
         <SafeAreaProvider>
            <View style={stylesImg.container}>
-               <Image source={require('C:\\Users\\olive\\mobile-software-development\\logo.png')} style={stylesImg}/>
+               <Image source={require('../../assets/logo.png')} style={stylesImg}/>
            </View>
             <TouchableOpacity
                 style={styles.button}
