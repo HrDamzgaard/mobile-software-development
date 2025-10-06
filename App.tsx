@@ -2,6 +2,12 @@ import * as React from 'react';
 import {createStaticNavigation} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {use} from "react";
+import { userAuth, AuthProvider } from './context/AuthContext';
+import AppHeader from './component/AppHeader';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+
+
 import LogCreateScreen from "./Screens/Login/StartScreen";
 import CreateAccountScreen from "./Screens/Login/CreateAccountScreen";
 import LoginScreen from "./Screens/Login/LoginScreen";
@@ -17,39 +23,56 @@ import { StatusBar } from 'expo-status-bar';
 
 
 SplashScreen.preventAutoHideAsync(); 
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 
-const RootStack = createNativeStackNavigator({
+
+
+const AuthStack = createNativeStackNavigator({
   screens: {
-    StartScreen: {
-      screen: LogCreateScreen,
-    },
-    LoginScreen: {
-      screen: LoginScreen,
-    },
-    CreateAccountScreen: {
-      screen: CreateAccountScreen,
-    },
-    ResetPasswordScreen: {
-      screen: ResetPasswordScreen
-    },
-    HomeScreen: {
-      screen: HomeScreen
-    },
-    ProfileScreen: {
-      screen: ProfileScreen
-    },
-    CarDetails: {
-      screen: CarDetails,
-      options: { headerShown: false }  
-    }
-  
+    StartScreen: {screen: LogCreateScreen},
+    LoginScreen: {screen: LoginScreen},
+    CreateAccountScreen: {screen: CreateAccountScreen},
+    ResetPasswordScreen: {screen: ResetPasswordScreen}
   },
 });
 
-const Navigation = createStaticNavigation(RootStack);
+const AppDrawer = createDrawerNavigator({
+  screens: {
+    HomeScreen: {
+      screen: HomeScreen,
+      options: {
+        title: ' Home ',
+      },
+    },
+    Profile:{
+      screen: ProfileScreen,
+      options: {
+        title: ' Profile ',
+        drawerItemStyle: {display: 'none'}
+      },
+    }
+  },
+  screenOptions: {
+    header: (props) => <AppHeader {...props} />,
+   },
+});
+
+
+
+function RootNav() {
+  const {user, loading} = userAuth();
+  if(loading) {
+    return null;
+  }
+
+  const Stack = user ? AppDrawer : AuthStack;
+  const Navigation = createStaticNavigation(Stack);
+  return <Navigation />;
+}
 
 export default function App() {
-   const [fontsLoaded, error] = useFonts({
+
+  const [fontsLoaded, error] = useFonts({
      Poppins_400Regular,
      Poppins_600SemiBold,
      Poppins_700Bold,
@@ -64,11 +87,13 @@ export default function App() {
   if (!fontsLoaded && !error) {
     return null;
   }
-
   return (
-    <>
-      <Navigation />
-      <StatusBar style="auto" />
-    </>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <AuthProvider>
+        <ActionSheetProvider>
+          <RootNav />
+        </ActionSheetProvider>
+      </AuthProvider>
+    </GestureHandlerRootView>
   );
 }

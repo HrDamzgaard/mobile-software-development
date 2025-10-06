@@ -9,6 +9,7 @@ import { Ionicons } from "@expo/vector-icons";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {useEffect} from "react";
+import { userAuth } from '../../context/AuthContext';
 
 
 export default function CreateAccountScreen() {
@@ -18,7 +19,8 @@ export default function CreateAccountScreen() {
         const [Number, SetNumber] = React.useState('');
         const [Password, SetPassword] = React.useState('');
         const [image, setImage] = useState<string | null>(null);
-        const onHome = () => {navigation.navigate("HomeScreen");};
+        const onProfile = () => {navigation.navigate("ProfileScreen");};
+        const {login} = userAuth();
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -37,7 +39,7 @@ export default function CreateAccountScreen() {
 
             const createAccount = async () => {
                 try {
-                    const responseUser = await fetch(`http://192.168.1.96:8080/api/users/create/${Name}/${Email}/${Password}/${Number}`,{ method: "POST" }
+                    const responseUser = await fetch(`http://localhost:8080/api/users/create/${Name}/${Email}/${Password}/${Number}`,{ method: "POST" }
                     );
                     console.log("user saved");
                     console.log(responseUser.url);

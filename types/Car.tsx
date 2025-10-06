@@ -1,4 +1,4 @@
-type Car = {
+export type Car = {
   id: string;
   name: string;
   model: string;
@@ -7,5 +7,3 @@ type Car = {
   listingdate: string;
   image: string;
 };
-
-export { Car };
