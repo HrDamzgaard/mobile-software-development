@@ -8,6 +8,15 @@ import LoginScreen from "./Screens/Login/LoginScreen";
 import ResetPasswordScreen from "./Screens/Login/ResetPasswordScreen";
 import HomeScreen from "./Screens/HomeScreen";
 import ProfileScreen from "./Screens/ProfileScreen";
+import { Poppins_400Regular, Poppins_600SemiBold, Poppins_700Bold } from '@expo-google-fonts/poppins';
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
+import { useEffect } from 'react';
+import CarDetails from './Screens/CarDetails';
+import { StatusBar } from 'expo-status-bar';
+
+
+SplashScreen.preventAutoHideAsync(); 
 
 const RootStack = createNativeStackNavigator({
   screens: {
@@ -28,12 +37,39 @@ const RootStack = createNativeStackNavigator({
     },
     ProfileScreen: {
       screen: ProfileScreen
+    },
+    CarDetails: {
+      screen: CarDetails,
+      options: { headerShown: false }  
     }
+  
   },
 });
 
 const Navigation = createStaticNavigation(RootStack);
 
 export default function App() {
-  return <Navigation />;
+   const [fontsLoaded, error] = useFonts({
+     Poppins_400Regular,
+     Poppins_600SemiBold,
+     Poppins_700Bold,
+   }); 
+
+   useEffect(() => {
+    if (fontsLoaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, error]);
+
+  if (!fontsLoaded && !error) {
+    return null;
+  }
+
+  return (
+    <>
+      <Navigation />
+      <StatusBar style="auto" />
+      
+    </>
+  );
 }
