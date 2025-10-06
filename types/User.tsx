@@ -1,4 +1,4 @@
-type User = {
+export type User = {
     id: string;
     name: string;
     email: string;
@@ -6,4 +6,3 @@ type User = {
     phone: string;
     profilePicture: string;
 };
-export { User };
