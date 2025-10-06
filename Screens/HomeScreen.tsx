@@ -1,12 +1,25 @@
-import { StatusBar } from 'expo-status-bar';
-import {FlatList, StyleSheet, Text, View, Dimensions, Image, Linking, TouchableOpacity} from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
+import { StatusBar } from 'expo-status-bar';
+import {
+    FlatList,
+    StyleSheet,
+    Text,
+    View,
+    Dimensions,
+    Image,
+    Linking,
+    TouchableOpacity,
+    Platform,
+    ActivityIndicator
+} from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {SafeAreaView} from "react-native";
+import {useEffect, useState} from "react";
 
 
-export default function HomeScreenPage() {
-    return (<
-            HomeScreen></HomeScreen>
+export default function App() {
+    return (
+        <HomeScreen></HomeScreen>
     );
 }
 
@@ -16,120 +29,102 @@ type Car = {
     model: string;
     location: string;
     price: string;
-    listingdate: string;
-    image: Image;
+    listingDate: string;
+    image: string;
 }
-
-const cars: Car[] = [
-    {
-        id: '1',
-        name: 'Car1',
-        model: 'BMW',
-        location: 'Copenhagen',
-        price: '1000',
-        listingdate: '01-01-2025',
-        image: require('../assets/icon.png')
-    },
-    {
-        id: '2',
-        name: 'Car2',
-        model: 'Ferrari',
-        location: 'Odense',
-        price: '1200',
-        listingdate: '03-07-2025',
-        image: require('../assets/icon.png')
-    },
-    {
-        id: '3',
-        name: 'Car3',
-        model: 'BMW',
-        location: 'Copenhagen',
-        price: '1000',
-        listingdate: '01-01-2025',
-        image: require('../assets/icon.png')
-    },
-    {
-        id: '4',
-        name: 'Car4',
-        model: 'Ferrari',
-        location: 'Odense',
-        price: '1200',
-        listingdate: '03-07-2025',
-        image: require('../assets/icon.png')
-    },
-    {
-        id: '5',
-        name: 'Car5',
-        model: 'BMW',
-        location: 'Copenhagen',
-        price: '1000',
-        listingdate: '01-01-2025',
-        image: require('../assets/icon.png')
-    },
-    {
-        id: '6',
-        name: 'Car6',
-        model: 'Ferrari',
-        location: 'Odense',
-        price: '1200',
-        listingdate: '03-07-2025',
-        image: require('../assets/icon.png')
-    },
-    {
-        id: '7',
-        name: 'Car7',
-        model: 'BMW',
-        location: 'Copenhagen',
-        price: '1000',
-        listingdate: '01-01-2025',
-        image: require('../assets/icon.png')
-    },
-    {
-        id: '8',
-        name: 'Car8',
-        model: 'Ferrari',
-        location: 'Odense',
-        price: '1200',
-        listingdate: '03-07-2025',
-        image: require('../assets/icon.png')
-    },]
-
-type HeaderComponentProps = {
-    title: string;
-    view?: string;
-};
-
-type ParamList = {
-    Detail: {
-        openDrawer: void;
-    };
-};
 
 
 const HomeScreen: React.FC = () => {
+    const [cars, setCars] = useState<Car[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const navigation = useNavigation();
+    const onProfile = () => {navigation.navigate("ProfileScreen");};
+
+    useEffect(() => {
+        const getCars = async () => {
+            try {
+                const responseCars = await fetch('http://192.168.1.96:8080/api/cars');
+                const data = await responseCars.json();
+                setCars(data);
+            } catch (error) {
+                console.error('Cannot get cars from endpoint')
+            } finally {
+                setLoading(false);
+            }
+        };
+        getCars();
+    }, []);
+
+    useEffect(() => {
+        const rentCar = async () => {
+            try {
+                const responseRent = await fetch('http://192.168.1.96:8080/api/rent/1', {method: 'PUT'});
+                const data = responseRent.json();
+                console.log(data.toString())
+            } catch (error) {
+                console.error('Cannot rent car 1 from endpoint.')
+            } finally {
+                setLoading(false);
+            }
+        };
+        rentCar();
+    }, []);
+
     const renderItem = ({item}: {item: Car}) => (
         <View style={styles.card}>
-            <Image source={require('../assets/icon.png')} style={styles.image}/>
+            <Image source={{uri: item.image}} style={styles.image}/>
             <View style={styles.info}>
                 <Text style={styles.name}>{item.name}</Text>
                 <Text style={styles.model}>{item.model}</Text>
                 <Text style={styles.location}>{item.location}</Text>
                 <Text style={styles.price}>{item.price}</Text>
-                <Text style={styles.listingdate}>{item.listingdate}</Text>
+                <Text style={styles.listingDate}>{item.listingDate}</Text>
             </View>
         </View>
     );
+    if (loading) {
+        return (
+            <SafeAreaView style={[styles.containerScreen, {alignItems: 'center', justifyContent: 'center'}]}>
+                <ActivityIndicator size="large" color="lightgrey"></ActivityIndicator>
+            </SafeAreaView>
+        )
+    }
     return (
-        <FlatList
-            data={cars}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.container}/>
+    <SafeAreaView style={styles.containerScreen}>
+            <View>
+                <View style={styles.headerBar}>
+                    <TouchableOpacity style={[styles.containerIcon, {justifyContent: 'flex-start',flexDirection: 'row', paddingLeft: 20 }]}>
+                        <Ionicons name="navicon" size={32} color="white"/>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.containerIcon, {justifyContent: 'flex-start',flexDirection: 'row', paddingRight: 20 }]} onPress={onProfile}>
+                        <Ionicons name="person-outline" size={32} color="white"/>
+                    </TouchableOpacity>
+                </View>
+                <FlatList
+                    data={cars}
+                    renderItem={renderItem}
+                    keyExtractor={(item) => item.id}
+                    contentContainerStyle={styles.container}/>
+            </View>
+        </SafeAreaView>
     )
 };
-const screenwidth = Dimensions.get('window').width;
+const screenWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
+    containerScreen: {
+        paddingTop: 52
+    },
+    containerIcon: {
+        alignItems: 'stretch',
+    },
+    headerBar: {
+        backgroundColor: "#0597D5",
+        height: 70,
+        alignItems: "center",
+        justifyContent: "space-between",
+        flexDirection: "row",
+    },
     container: {
         paddingVertical: 10,
     },
@@ -141,7 +136,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         overflow: 'hidden',
         elevation: 2,
-        width: screenwidth - 20,
+        width: screenWidth - 20,
     },
     image: {
         width: 100,
@@ -168,7 +163,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#555',
     },
-    listingdate: {
+    listingDate: {
         fontSize: 14,
         color: '#555',
     },
