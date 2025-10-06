@@ -1,11 +1,11 @@
 import * as React from 'react';
-import {createStaticNavigation} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {use} from "react";
+import { createStaticNavigation, NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { use } from "react";
 import { userAuth, AuthProvider } from './context/AuthContext';
 import AppHeader from './component/AppHeader';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 
 import LogCreateScreen from "./Screens/Login/StartScreen";
@@ -22,17 +22,17 @@ import CarDetails from './Screens/CarDetails';
 import { StatusBar } from 'expo-status-bar';
 
 
-SplashScreen.preventAutoHideAsync(); 
+SplashScreen.preventAutoHideAsync();
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 
 
 
 const AuthStack = createNativeStackNavigator({
   screens: {
-    StartScreen: {screen: LogCreateScreen},
-    LoginScreen: {screen: LoginScreen},
-    CreateAccountScreen: {screen: CreateAccountScreen},
-    ResetPasswordScreen: {screen: ResetPasswordScreen}
+    StartScreen: { screen: LogCreateScreen },
+    LoginScreen: { screen: LoginScreen },
+    CreateAccountScreen: { screen: CreateAccountScreen },
+    ResetPasswordScreen: { screen: ResetPasswordScreen }
   },
 });
 
@@ -44,24 +44,31 @@ const AppDrawer = createDrawerNavigator({
         title: ' Home ',
       },
     },
-    Profile:{
+    Profile: {
       screen: ProfileScreen,
       options: {
         title: ' Profile ',
-        drawerItemStyle: {display: 'none'}
+        drawerItemStyle: { display: 'none' }
       },
-    }
+    },
+    CarDetails: {
+      screen: CarDetails,
+      options: {
+        title: ' Car Details ',
+        drawerItemStyle: { display: 'none' }
+      },
+  },
   },
   screenOptions: {
     header: (props) => <AppHeader {...props} />,
-   },
+  },
 });
 
 
 
 function RootNav() {
-  const {user, loading} = userAuth();
-  if(loading) {
+  const { user, loading } = userAuth();
+  if (loading) {
     return null;
   }
 
@@ -70,15 +77,16 @@ function RootNav() {
   return <Navigation />;
 }
 
+
 export default function App() {
 
   const [fontsLoaded, error] = useFonts({
-     Poppins_400Regular,
-     Poppins_600SemiBold,
-     Poppins_700Bold,
-   }); 
+    Poppins_400Regular,
+    Poppins_600SemiBold,
+    Poppins_700Bold,
+  });
 
-   useEffect(() => {
+  useEffect(() => {
     if (fontsLoaded || error) {
       SplashScreen.hideAsync();
     }
@@ -87,6 +95,7 @@ export default function App() {
   if (!fontsLoaded && !error) {
     return null;
   }
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <AuthProvider>
