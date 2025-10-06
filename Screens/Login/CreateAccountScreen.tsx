@@ -37,7 +37,7 @@ export default function CreateAccountScreen() {
 
             const createAccount = async () => {
                 try {
-                    const responseUser = await fetch(`http://192.168.1.96:8080/api/users/create/${Name}/${Email}/${Password}/${Number}`,{ method: "POST" }
+                    const responseUser = await fetch(`http://192.168.56.1:8080/api/users/create/${Name}/${Email}/${Password}/${Number}`,{ method: "POST" }
                     );
                     console.log("user saved");
                     console.log(responseUser.url);

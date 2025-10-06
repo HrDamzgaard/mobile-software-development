@@ -15,6 +15,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {SafeAreaView} from "react-native";
 import {useEffect, useState} from "react";
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 
 export default function App() {
@@ -43,7 +44,7 @@ const HomeScreen: React.FC = () => {
     useEffect(() => {
         const getCars = async () => {
             try {
-                const responseCars = await fetch('http://192.168.1.96:8080/api/cars');
+                const responseCars = await fetch('http://192.168.56.1:8080/api/cars');
                 const data = await responseCars.json();
                 setCars(data);
             } catch (error) {
@@ -58,7 +59,7 @@ const HomeScreen: React.FC = () => {
     useEffect(() => {
         const rentCar = async () => {
             try {
-                const responseRent = await fetch('http://192.168.1.96:8080/api/rent/1', {method: 'PUT'});
+                const responseRent = await fetch('http://192.168.56.1:8080/api/rent/1', {method: 'PUT'});
                 const data = responseRent.json();
                 console.log(data.toString())
             } catch (error) {
@@ -94,7 +95,7 @@ const HomeScreen: React.FC = () => {
             <View>
                 <View style={styles.headerBar}>
                     <TouchableOpacity style={[styles.containerIcon, {justifyContent: 'flex-start',flexDirection: 'row', paddingLeft: 20 }]}>
-                        <Ionicons name="navicon" size={32} color="white"/>
+                        <AntDesign name="Home" size={32} color="white"/>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.containerIcon, {justifyContent: 'flex-start',flexDirection: 'row', paddingRight: 20 }]} onPress={onProfile}>
                         <Ionicons name="person-outline" size={32} color="white"/>

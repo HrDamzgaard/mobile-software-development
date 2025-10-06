@@ -4,19 +4,37 @@ import { useActionSheet } from '@expo/react-native-action-sheet';
 import * as ImagePicker from 'expo-image-picker';
 import { Car } from '../types/Car';
 import { useEffect } from 'react';
+import Ionicons from "react-native-vector-icons/Ionicons";
+import {useNavigation} from "@react-navigation/native";
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 const screenwidth = Dimensions.get('window').width;
 
 
 const ProfileScreen = () => {
+
   return (
     <View >
+      < Header />
       <ProfileHeader />
       <RentedCars />
     </View>
   );
 }
 
+const Header = () => {
+  const navigation = useNavigation();
+  const onHome = () => {navigation.navigate("HomeScreen");};
+  return(
+  <View style={listStyles.headerBar}>
+    <TouchableOpacity style={[listStyles.containerIcon, {justifyContent: 'flex-start',flexDirection: 'row', paddingLeft: 20 }]} onPress={onHome}>
+      <AntDesign name="home" size={32} color="white"/>
+    </TouchableOpacity>
+    <TouchableOpacity style={[listStyles.containerIcon, {justifyContent: 'flex-start',flexDirection: 'row', paddingRight: 20 }]}>
+      <Ionicons name="person-outline" size={32} color="white"/>
+    </TouchableOpacity>
+  </View>);
+}
 
 const ProfileHeader = () => {
   const { showActionSheetWithOptions } = useActionSheet();
@@ -97,7 +115,7 @@ const RentedCars: React.FC = () => {
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const response = await fetch('http://192.168.1.96:8080/api/cars');
+        const response = await fetch('http://192.168.56.1:8080/api/cars');
         const data = await response.json();
         setCars(data);
       } catch (error) {
@@ -198,6 +216,15 @@ const RentedCars: React.FC = () => {
     fontSize: 14,
     color: '#555',
   },
+        containerIcon: {
+          alignItems: 'stretch',
+        },
+        headerBar: {
+          backgroundColor: "#0597D5",
+          height: 70,
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexDirection: "row",
+        },
   });
-
 export default ProfileScreen;
