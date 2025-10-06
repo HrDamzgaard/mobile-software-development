@@ -39,11 +39,10 @@ const HomeScreen: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const navigation = useNavigation();
     const onCar = () => {navigation.navigate("CarDetails");};
-    const onProfile = () => {navigation.navigate("ProfileScreen");};
     useEffect(() => {
         const getCars = async () => {
             try {
-                const responseCars = await fetch('http://192.168.1.96:8080/api/cars');
+                const responseCars = await fetch('http://localhost:8080/api/cars');
                 const data = await responseCars.json();
                 setCars(data);
             } catch (error) {
@@ -58,7 +57,7 @@ const HomeScreen: React.FC = () => {
     useEffect(() => {
         const rentCar = async () => {
             try {
-                const responseRent = await fetch('http://192.168.1.96:8080/api/rent/1', {method: 'PUT'});
+                const responseRent = await fetch('http://localhost:8080/api/rent/1', {method: 'PUT'});
                 const data = responseRent.json();
                 console.log(data.toString())
             } catch (error) {
@@ -92,14 +91,6 @@ const HomeScreen: React.FC = () => {
     return (
     <SafeAreaView style={styles.containerScreen}>
             <View>
-                <View style={styles.headerBar}>
-                    <TouchableOpacity style={[styles.containerIcon, {justifyContent: 'flex-start',flexDirection: 'row', paddingLeft: 20 }]}>
-                        <AntDesign name="Home" size={32} color="white"/>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={[styles.containerIcon, {justifyContent: 'flex-start',flexDirection: 'row', paddingRight: 20 }]} onPress={onProfile}>
-                        <Ionicons name="person-outline" size={32} color="white"/>
-                    </TouchableOpacity>
-                </View>
                 <FlatList
                     data={cars}
                     renderItem={renderItem}
