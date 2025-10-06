@@ -3,7 +3,7 @@ import {createStaticNavigation} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {use} from "react";
 import { userAuth, AuthProvider } from './context/AuthContext';
-
+import AppHeader from './component/AppHeader';
 
 import LogCreateScreen from "./Screens/Login/StartScreen";
 import CreateAccountScreen from "./Screens/Login/CreateAccountScreen";
@@ -27,8 +27,16 @@ const AuthStack = createNativeStackNavigator({
 
 const AppStack = createNativeStackNavigator({
   screens: {
-    HomeScreen: {screen: HomeScreen},
+    HomeScreen: {
+      screen: HomeScreen,
+      options: {
+        title: '  ',
+      },
+    },
     ProfileScreen: {screen: ProfileScreen},
+  },
+  screenOptions: {
+    header: (props) => <AppHeader {...props} />,
   },
 });
 
