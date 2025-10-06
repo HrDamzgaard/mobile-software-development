@@ -115,7 +115,7 @@ const RentedCars: React.FC = () => {
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const response = await fetch('http://192.168.56.1:8080/api/cars');
+        const response = await fetch('http://192.168.1.96:8080/api/cars');
         const data = await response.json();
         setCars(data);
       } catch (error) {

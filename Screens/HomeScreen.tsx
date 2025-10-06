@@ -17,7 +17,6 @@ import {SafeAreaView} from "react-native";
 import {useEffect, useState} from "react";
 import AntDesign from '@expo/vector-icons/AntDesign';
 
-
 export default function App() {
     return (
         <HomeScreen></HomeScreen>
@@ -39,12 +38,12 @@ const HomeScreen: React.FC = () => {
     const [cars, setCars] = useState<Car[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const navigation = useNavigation();
+    const onCar = () => {navigation.navigate("CarDetails");};
     const onProfile = () => {navigation.navigate("ProfileScreen");};
-
     useEffect(() => {
         const getCars = async () => {
             try {
-                const responseCars = await fetch('http://192.168.56.1:8080/api/cars');
+                const responseCars = await fetch('http://192.168.1.96:8080/api/cars');
                 const data = await responseCars.json();
                 setCars(data);
             } catch (error) {
@@ -59,7 +58,7 @@ const HomeScreen: React.FC = () => {
     useEffect(() => {
         const rentCar = async () => {
             try {
-                const responseRent = await fetch('http://192.168.56.1:8080/api/rent/1', {method: 'PUT'});
+                const responseRent = await fetch('http://192.168.1.96:8080/api/rent/1', {method: 'PUT'});
                 const data = responseRent.json();
                 console.log(data.toString())
             } catch (error) {
@@ -72,7 +71,7 @@ const HomeScreen: React.FC = () => {
     }, []);
 
     const renderItem = ({item}: {item: Car}) => (
-        <View style={styles.card}>
+        <TouchableOpacity style={styles.card} onPress={onCar}>
             <Image source={{uri: item.image}} style={styles.image}/>
             <View style={styles.info}>
                 <Text style={styles.name}>{item.name}</Text>
@@ -81,7 +80,7 @@ const HomeScreen: React.FC = () => {
                 <Text style={styles.price}>{item.price}</Text>
                 <Text style={styles.listingDate}>{item.listingDate}</Text>
             </View>
-        </View>
+        </TouchableOpacity>
     );
     if (loading) {
         return (

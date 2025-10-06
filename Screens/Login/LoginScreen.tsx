@@ -16,7 +16,7 @@ export default function LoginScreen() {
 
     const checkLogin = async() => {
         try{
-            const response = await fetch(`http://192.168.56.1:8080/api/users`)
+            const response = await fetch(`http://192.168.1.96:8080/api/users`)
             const users = await response.json();
             console.log(users);
             const matchedUser = users.find(user => user.username === Name && user.password === Password);

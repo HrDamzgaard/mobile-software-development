@@ -69,7 +69,6 @@ export default function App() {
     <>
       <Navigation />
       <StatusBar style="auto" />
-      
     </>
   );
 }
