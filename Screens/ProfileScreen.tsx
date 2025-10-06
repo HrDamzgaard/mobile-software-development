@@ -4,13 +4,15 @@ import { useActionSheet } from '@expo/react-native-action-sheet';
 import * as ImagePicker from 'expo-image-picker';
 import { Car } from '../types/Car';
 import { useEffect } from 'react';
+import { userAuth } from '../context/AuthContext';
 
 const screenwidth = Dimensions.get('window').width;
 
 
 const ProfileScreen = () => {
+  console.log("Rendering ProfileScreen");
   return (
-    <View >
+    <View style={{flex: 1}}>
       <ProfileHeader />
       <RentedCars />
     </View>
@@ -19,6 +21,7 @@ const ProfileScreen = () => {
 
 
 const ProfileHeader = () => {
+  console.log("Rendering ProfileHeader");
   const { showActionSheetWithOptions } = useActionSheet();
   const [profileImageUri, setProfileImageUri] = React.useState<string | null>(null);
 
@@ -75,6 +78,8 @@ const ProfileHeader = () => {
     );
   };
 
+  const {logOut} = userAuth();
+
   return(
     <View style={headerStyles.container}>
       <TouchableOpacity onPress={onPressChangeProfilePicture}>
@@ -84,7 +89,7 @@ const ProfileHeader = () => {
           />
       </TouchableOpacity>
       <View style={headerStyles.button}>
-        <Button title="Log Out" onPress={() => {}} />
+        <Button title="Log Out" onPress={logOut} />
       </View>
     </View>
     
@@ -145,7 +150,7 @@ const RentedCars: React.FC = () => {
   const listStyles = StyleSheet.create({
     outerContainer: {
       width: screenwidth * 0.92,
-      height: screenwidth * 1.2,
+      //height: screenwidth * 1.2,
       alignSelf: 'center',
       borderWidth: 1,
       borderColor: '#ccc',
@@ -153,6 +158,7 @@ const RentedCars: React.FC = () => {
       overflow: 'hidden',
       marginTop: 10,
       backgroundColor: '#464444ff',
+      flex: 1,
   },
     container: {
     paddingVertical: 10,

@@ -5,8 +5,8 @@ import {useNavigation} from '@react-navigation/native';
 
 
 export default function HomeScreenPage() {
-    return (<
-            HomeScreen></HomeScreen>
+    return (< HomeScreen></HomeScreen>
+
     );
 }
 
@@ -120,6 +120,7 @@ const HomeScreen: React.FC = () => {
         </View>
     );
     return (
+        
         <FlatList
             data={cars}
             renderItem={renderItem}
