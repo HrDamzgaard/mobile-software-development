@@ -4,6 +4,9 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {use} from "react";
 import { userAuth, AuthProvider } from './context/AuthContext';
 import AppHeader from './component/AppHeader';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+
 
 import LogCreateScreen from "./Screens/Login/StartScreen";
 import CreateAccountScreen from "./Screens/Login/CreateAccountScreen";
@@ -24,21 +27,27 @@ const AuthStack = createNativeStackNavigator({
   },
 });
 
-
-const AppStack = createNativeStackNavigator({
+const AppDrawer = createDrawerNavigator({
   screens: {
     HomeScreen: {
       screen: HomeScreen,
       options: {
-        title: '  ',
+        title: ' Home ',
       },
     },
-    ProfileScreen: {screen: ProfileScreen},
+    Profile:{
+      screen: ProfileScreen,
+      options: {
+        title: ' Profile ',
+        drawerItemStyle: {display: 'none'}
+      },
+    }
   },
   screenOptions: {
     header: (props) => <AppHeader {...props} />,
-  },
+   },
 });
+
 
 
 function RootNav() {
@@ -47,17 +56,19 @@ function RootNav() {
     return null;
   }
 
-  const Stack = user ? AppStack : AuthStack;
+  const Stack = user ? AppDrawer : AuthStack;
   const Navigation = createStaticNavigation(Stack);
   return <Navigation />;
 }
 
 export default function App() {
   return (
-    <AuthProvider>
-      <ActionSheetProvider>
-        <RootNav />
-      </ActionSheetProvider>
-    </AuthProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <AuthProvider>
+        <ActionSheetProvider>
+          <RootNav />
+        </ActionSheetProvider>
+      </AuthProvider>
+    </GestureHandlerRootView>
   );
 }

@@ -1,22 +1,32 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, Button } from "react-native";
+import { View, Text, StyleSheet, Image, Button, TouchableOpacity } from "react-native";
 import { userAuth } from "../context/AuthContext";
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets, SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation, DrawerActions } from '@react-navigation/native';
 
-const AppHeader: React.FC = ({navigation, route, profile}) => {
+
+interface AppHeaderProps {
+    navigation: any;
+    options: { title: string };
+}
+
+const AppHeader: React.FC<AppHeaderProps> = ({options}) => {
     const insets = useSafeAreaInsets();
-    const {user} = userAuth();
+    const navigation = useNavigation<any>();
 
     return (
         <SafeAreaView >
             <View>
                 <View style={styles.headerBar}>
+                    <TouchableOpacity style={styles.containerIcon} onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
+                        <Ionicons name="menu-outline" size={32} color="white" />
+                    </TouchableOpacity>
+                    <Text style={{color: "white", fontSize: 20, fontWeight: "bold"}}>{options.title}</Text>
                     <View style={[styles.containerIcon]}>
-                        <Ionicons name="menu-outline" size={32} color="white"/>
-                    </View>
-                    <View style={[styles.containerIcon]}>
-                        <Ionicons name="person-circle-outline" size={32} color="white" onPress={() => navigation.navigate('ProfileScreen')} />
+                        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+                            <Ionicons name="person-circle-outline" size={32} color="white" />
+                        </TouchableOpacity>
                     </View>
                 </View>
             </View>
