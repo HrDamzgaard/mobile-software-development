@@ -90,7 +90,7 @@ const ProfileHeader = () => {
           style={{ width: 200, height: 200, borderRadius: 100, marginTop: 20 }}
         />
       </TouchableOpacity>
-      <View style={headerStyles.button}>
+      <View style={[headerStyles.button, { borderRadius: 100 }]}>
         <Button title="Log Out" onPress={logOut} />
       </View>
     </View>
@@ -165,7 +165,7 @@ const listStyles = StyleSheet.create({
     borderRadius: 12,
     overflow: 'hidden',
     marginTop: 10,
-    backgroundColor: '#464444ff',
+    backgroundColor: '#0597D5',
     flex: 1,
   },
   container: {
@@ -175,7 +175,7 @@ const listStyles = StyleSheet.create({
   },
   card: {
     flexDirection: 'row',
-    backgroundColor: '#a19f9fff',
+    backgroundColor: '#fff',
     marginVertical: 8,
     marginHorizontal: 10,
     borderRadius: 8,
