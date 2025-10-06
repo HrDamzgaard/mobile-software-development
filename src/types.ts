@@ -1,11 +1,11 @@
 export type Car = {
   id: number;
-  model: string;        // sadece model başlıkta görünecek
-  location: string;     // Location: ...
-  listingDate: string;  // Listing Date: ...
+  model: string;        
+  location: string;     
+  listingDate: string;  
   imageUrl: string;
   price: number;
   currency: string;
   per: string;
-  status: string; // "Available" | "Rented"
+  status: string; 
 };

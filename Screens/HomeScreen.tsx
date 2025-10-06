@@ -38,7 +38,7 @@ const HomeScreen: React.FC = () => {
     const [cars, setCars] = useState<Car[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const navigation = useNavigation();
-    const onCar = () => {navigation.navigate("CarDetails");};
+    const onCar = (id: string) => {navigation.navigate("CarDetails", { id });};
     useEffect(() => {
         const getCars = async () => {
             try {
@@ -70,7 +70,7 @@ const HomeScreen: React.FC = () => {
     }, []);
 
     const renderItem = ({item}: {item: Car}) => (
-        <TouchableOpacity style={styles.card} onPress={onCar}>
+        <TouchableOpacity style={styles.card} onPress={() => onCar(item.id)}>
             <Image source={{uri: item.image}} style={styles.image}/>
             <View style={styles.info}>
                 <Text style={styles.name}>{item.name}</Text>

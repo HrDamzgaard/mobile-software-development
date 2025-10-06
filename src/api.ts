@@ -1,6 +1,3 @@
-// frontend/lib/api.ts
-// frontend/types.ts
-
 import { Car } from "./types";
 
 
@@ -9,34 +6,34 @@ type BackendCar = {
   name: string;
   model: string;
   location: string;
-  price: string;         // backend string döndürüyor
+  price: string;         
   listingDate: string;
-  image: string;         // ör: http://192.168.1.22:8080/images/car1.png
-  status: string;        // "Available" | "Rented"
+  image: string;         
+  status: string;        
 };
 
 
 export const BASE_URL = 'http://localhost:8080';
 
 
-/** Görsel URL’lerini normalize et */
+
 function normalizeImageUrl(u: string): string {
   if (!u) return '';
   try {
-    const url = new URL(u, BASE_URL); // relative gelirse tamamlar
+    const url = new URL(u, BASE_URL); 
     return url.toString();
   } catch {
     return u;
   }
 }
 
-/** Backend -> UI tipi adaptörü */
+
 function mapToUiCar(b: BackendCar): Car {
   return {
     id: Number(b.id),
-    model: b.model,               // başlıkta sadece model
-    location: b.location,         // Location: ...
-    listingDate: b.listingDate,   // Listing Date: ...
+    model: b.model,               
+    location: b.location,         
+    listingDate: b.listingDate,   
     imageUrl: normalizeImageUrl(b.image),
     price: Number(b.price),
     currency: 'DKK',
@@ -59,7 +56,6 @@ export async function fetchCar(id: number): Promise<Car> {
 }
 
 export async function rentCar(id: number): Promise<{ message: string }> {
-  // Spring Boot PUT ve düz metin döndürüyor
   const r = await fetch(`${BASE_URL}/api/rent/${id}`, { method: 'PUT' });
   if (!r.ok) throw new Error(`HTTP ${r.status}`);
   const text = await r.text();

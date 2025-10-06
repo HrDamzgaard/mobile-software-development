@@ -1,9 +1,9 @@
 const colors = {
-  brand: '#0597D5',       // Deep sea blue (main)
-  light: '#4DCAFF',       // Lighter blue (Go Back)
+  brand: '#0597D5',       
+  light: '#4DCAFF',       
   text: '#222222',
   textMuted: '#666666',
-  bg: '#FFFFFF',          // full white background
+  bg: '#FFFFFF',          
   surface: '#E9EEF3',
 };
 

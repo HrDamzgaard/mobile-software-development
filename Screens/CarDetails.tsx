@@ -1,4 +1,3 @@
-// src/screens/OnatScreen.tsx
 import React, { useEffect, useMemo, useState } from 'react';
 import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -10,16 +9,17 @@ import { BASE_URL, fetchCar, rentCar } from '../src/api';
 import colors from '../src/theme/colors';
 import { typography } from '../src/theme/typography';
 import type { Car } from '../src/types';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
-export default function OnatScreen() {
-
-  const id = 1;
+export default function CarDetails() {
+  const route = useRoute();
+  const id = route.params ? (route.params as any).id : null;
   const [car, setCar] = useState<Car | null>(null);
   const [loading, setLoading] = useState(true);
   const [renting, setRenting] = useState(false);
 
-  const BRAND = colors.brand; // #0597D5
-  const LIGHT = colors.light; // #4DCAFF
+  const BRAND = colors.brand; 
+  const LIGHT = colors.light; 
 
   useEffect(() => {
     let mounted = true;
@@ -35,7 +35,7 @@ export default function OnatScreen() {
       }
     })();
     return () => { mounted = false; };
-  }, []);
+  }, [id]);
 
   const imageUri = useMemo(() => {
     const u = (car as any)?.image || (car as any)?.imageUrl || '';
@@ -86,37 +86,21 @@ export default function OnatScreen() {
     } finally { setRenting(false); }
   }
 
-
+const navigation = useNavigation();
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
-      {/* HEADER: tek katman, üst safe-area kadar paddingTop */}
-      <View style={[styles.header, { paddingTop: 36, backgroundColor: BRAND }]}>
-        <View style={styles.headerContent}>
-          {/* Burger - SOL */}
-          <View style={styles.burger}>
-            <View style={styles.line} />
-            <View style={styles.line} />
-            <View style={styles.line} />
-          </View>
-
-          {/* Avatar - SAĞ (beyaz daire içinde) */}
-          <View style={styles.avatarWrap}>
-            <Text style={styles.avatarEmoji}>👤</Text>
-          </View>
-        </View>
-      </View>
-
-      {/* HEADER ALTINDA: Go Back - sola hizalı, açık mavi */}
+      
+      {/* Go Back Button */}
       <View style={styles.backRow}>
         <Pressable
-          onPress={() => Alert.alert('Back', 'Navigation yok, sadece demo')}
+          onPress={() => navigation.goBack()}
           style={[styles.goBack, { backgroundColor: LIGHT, borderColor: LIGHT }]}
         >
           <Text style={styles.goBackText}>Go Back</Text>
         </Pressable>
       </View>
 
-      {/* İÇERİK */}
+      {/* Content */}
       <View style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={styles.container}>
           <View style={styles.imageBox}>
@@ -132,15 +116,15 @@ export default function OnatScreen() {
             )}
           </View>
 
-          {/* BAŞLIK */}
+          {/* Title */}
           <Text style={styles.title}>{titleText}</Text>
 
-          {/* AÇIKLAMA (varsa) */}
+          {/* Description */}
           {(car as any)?.description ? (
             <Text style={styles.description}>{String((car as any).description)}</Text>
           ) : null}
 
-          {/* METADATA */}
+          {/* Data */}
           {!loading && (
             <View style={styles.metaBox}>
               <Text style={styles.metaLine}>
@@ -178,28 +162,9 @@ export default function OnatScreen() {
 }
 
 const styles = StyleSheet.create({
-  // HEADER
-  header: {
-    // toplam yükseklik = paddingTop(insets.top) + 56
-  },
-  headerContent: {
-    height: 56,
-    paddingHorizontal: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between', // burger SOL, avatar SAĞ
-  },
-  burger: { width: 28, gap: 4 },
-  line: { height: 3, backgroundColor: '#fff', borderRadius: 2 },
 
-  avatarWrap: {
-    width: 36, height: 36, borderRadius: 18,
-    backgroundColor: '#fff',
-    alignItems: 'center', justifyContent: 'center',
-  },
-  avatarEmoji: { fontSize: 18, lineHeight: 20 },
-
-  // Back button row (header altında)
+  
+  // Back button 
   backRow: { paddingHorizontal: 16, paddingTop: 8, paddingBottom: 0, backgroundColor: '#fff' },
   goBack: {
     paddingHorizontal: 12,

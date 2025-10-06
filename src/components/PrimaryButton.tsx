@@ -14,8 +14,8 @@ type Props = {
   title: string;
   onPress: () => void;
   loading?: boolean;
-  style?: StyleProp<ViewStyle>;     // dışardan override
-  textStyle?: StyleProp<TextStyle>; // dışardan override
+  style?: StyleProp<ViewStyle>;     
+  textStyle?: StyleProp<TextStyle>; 
   disabled?: boolean;
 };
 
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.brand,   // default: brand blue
+    backgroundColor: colors.brand,   
     borderColor: colors.brand,
   },
   text: {
