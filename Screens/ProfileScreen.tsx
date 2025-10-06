@@ -22,20 +22,6 @@ const ProfileScreen = () => {
   );
 }
 
-const Header = () => {
-  const navigation = useNavigation();
-  const onHome = () => {navigation.navigate("HomeScreen");};
-  return(
-  <View style={listStyles.headerBar}>
-    <TouchableOpacity style={[listStyles.containerIcon, {justifyContent: 'flex-start',flexDirection: 'row', paddingLeft: 20 }]} onPress={onHome}>
-      <AntDesign name="home" size={32} color="white"/>
-    </TouchableOpacity>
-    <TouchableOpacity style={[listStyles.containerIcon, {justifyContent: 'flex-start',flexDirection: 'row', paddingRight: 20 }]}>
-      <Ionicons name="person-outline" size={32} color="white"/>
-    </TouchableOpacity>
-  </View>);
-}
-
 const ProfileHeader = () => {
   console.log("Rendering ProfileHeader");
   const { showActionSheetWithOptions } = useActionSheet();
