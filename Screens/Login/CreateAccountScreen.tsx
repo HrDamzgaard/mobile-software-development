@@ -18,7 +18,7 @@ export default function CreateAccountScreen() {
         const [Number, SetNumber] = React.useState('');
         const [Password, SetPassword] = React.useState('');
         const [image, setImage] = useState<string | null>(null);
-        const onProfile = () => {navigation.navigate("ProfileScreen");};
+        const onHome = () => {navigation.navigate("HomeScreen");};
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -41,7 +41,7 @@ export default function CreateAccountScreen() {
                     );
                     console.log("user saved");
                     console.log(responseUser.url);
-                    onProfile();
+                    onHome();
                 } catch (error) {
                     console.error('Cannot save user on endpoints')
                 }
