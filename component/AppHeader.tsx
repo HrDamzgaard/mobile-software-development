@@ -20,12 +20,12 @@ const AppHeader: React.FC<AppHeaderProps> = ({options}) => {
             <View>
                 <View style={styles.headerBar}>
                     <TouchableOpacity style={styles.containerIcon} onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
-                        <Ionicons name="menu-outline" size={32} color="white" />
+                        <Ionicons name="menu-outline" size={32} color="black" />
                     </TouchableOpacity>
-                    <Text style={{color: "white", fontSize: 20, fontWeight: "bold"}}>{options.title}</Text>
+                    <Text style={{color: "black", fontSize: 20, fontWeight: "bold"}}>{options.title}</Text>
                     <View style={[styles.containerIcon]}>
                         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-                            <Ionicons name="person-circle-outline" size={32} color="white" />
+                            <Ionicons name="person-circle-outline" size={32} color="black" />
                         </TouchableOpacity>
                     </View>
                 </View>

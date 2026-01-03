@@ -29,10 +29,18 @@ import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 
 const AuthStack = createNativeStackNavigator({
   screens: {
-    StartScreen: { screen: LogCreateScreen },
-    LoginScreen: { screen: LoginScreen },
-    CreateAccountScreen: { screen: CreateAccountScreen },
-    ResetPasswordScreen: { screen: ResetPasswordScreen }
+    StartScreen: { screen: LogCreateScreen, options: {
+        title: ' Start ',
+      },},
+    LoginScreen: { screen: LoginScreen , options: {
+        title: ' Login ',
+      },},
+    CreateAccountScreen: { screen: CreateAccountScreen, options: {
+        title: ' Create Account ',
+      }, },
+    ResetPasswordScreen: { screen: ResetPasswordScreen , options: {
+        title: ' Reset Password ',
+      }, }
   },
 });
 

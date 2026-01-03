@@ -9,11 +9,13 @@ type BackendCar = {
   price: string;         
   listingDate: string;
   image: string;         
-  status: string;        
+  status: string;
+  totalprice: number;
+  days: number;
 };
 
 
-export const BASE_URL = 'http://localhost:8080';
+export const BASE_URL= 'http://192.168.1.96:8080';
 
 
 
@@ -39,6 +41,8 @@ function mapToUiCar(b: BackendCar): Car {
     currency: 'DKK',
     per: 'day',
     status: b.status,
+    totalprice: b.totalprice,
+    days: b.days
   };
 }
 
@@ -55,9 +59,15 @@ export async function fetchCar(id: number): Promise<Car> {
   return mapToUiCar(found);
 }
 
-export async function rentCar(id: number): Promise<{ message: string }> {
-  const r = await fetch(`${BASE_URL}/api/rent/${id}`, { method: 'PUT' });
+export async function rentCar(id: number, username: string): Promise<{ message: string }> {
+  const r = await fetch(`${BASE_URL}/api/rent/${id}/${username}`, { method: 'PUT' });
   if (!r.ok) throw new Error(`HTTP ${r.status}`);
   const text = await r.text();
   return { message: text };
+}
+
+export async function fetchProfileCar(username: string):  Promise< "users, cars retrieved"> {
+  const r = await fetch(`${BASE_URL}/api/users/${username}/rentals}`, { method: 'GET' });
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return r.json();
 }

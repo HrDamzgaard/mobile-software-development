@@ -6,19 +6,19 @@ import { Ionicons } from '@expo/vector-icons';
 import ResetPasswordScreen from "./ResetPasswordScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { userAuth } from '../../context/AuthContext';
+import {BASE_URL} from "../../src/api";
 
 export default function LoginScreen() {
     const navigation = useNavigation();
     const [Name, SetName] = React.useState('');
     const [Password, SetPassword] = React.useState('');
     const onResetPressed = () => {navigation.navigate("ResetPasswordScreen");};
-    const onHome = () => {navigation.navigate("HomeScreen");};
     const {login} = userAuth();
 
 
     const checkLogin = async() => {
         try{
-            const response = await fetch(`http://localhost:8080/api/users`)
+            const response = await fetch(`${BASE_URL}/api/users`)
             const users = await response.json();
             console.log(users);
             const matchedUser = users.find(user => user.username === Name && user.password === Password);
@@ -27,7 +27,6 @@ export default function LoginScreen() {
                 await AsyncStorage.setItem("userData", JSON.stringify(matchedUser));
                 login(matchedUser);
                 console.log(await AsyncStorage.getItem("userData"));
-                //onHome(); // No longer needed, context handles navigation
             }
         }
         catch (e) {
@@ -38,10 +37,10 @@ export default function LoginScreen() {
         return (
             <SafeAreaProvider>
                     <View style={styles.inputContainer}>
-                        <Ionicons name="mail-outline" size={20} color="black" style={styles.icon} />
+                        <Ionicons name="person" size={20} color="black" style={styles.icon} />
                         <TextInput
                             style={styles.input}
-                            placeholder="Name"
+                            placeholder="User Name"
                             onChangeText={SetName}
                             value={Name}
                         />

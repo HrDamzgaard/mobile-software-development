@@ -10,6 +10,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {useEffect} from "react";
 import { userAuth } from '../../context/AuthContext';
+import {BASE_URL} from "../../src/api";
 
 
 export default function CreateAccountScreen() {
@@ -19,8 +20,8 @@ export default function CreateAccountScreen() {
         const [Number, SetNumber] = React.useState('');
         const [Password, SetPassword] = React.useState('');
         const [image, setImage] = useState<string | null>(null);
-        const onProfile = () => {navigation.navigate("ProfileScreen");};
-        const {login} = userAuth();
+        const onLogin = () => {navigation.navigate("LoginScreen");};
+    const {login} = userAuth();
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -39,11 +40,11 @@ export default function CreateAccountScreen() {
 
             const createAccount = async () => {
                 try {
-                    const responseUser = await fetch(`http://localhost:8080/api/users/create/${Name}/${Email}/${Password}/${Number}`,{ method: "POST" }
+                    const responseUser = await fetch(`${BASE_URL}/api/users/create/${Name}/${Email}/${Password}/${Number}`,{ method: "POST" }
                     );
                     console.log("user saved");
                     console.log(responseUser.url);
-                    onHome();
+                    onLogin()
                 } catch (error) {
                     console.error('Cannot save user on endpoints')
                 }
@@ -55,7 +56,7 @@ export default function CreateAccountScreen() {
                     <View style={styles.inputContainer}>
                         <Ionicons  name="person" size={20} color="black" style={styles.icon} />
                         <TextInput
-                            placeholder="Full name"
+                            placeholder="User Name"
                             style={styles.input}
                             onChangeText={SetName}
                             value={Name}
@@ -74,6 +75,7 @@ export default function CreateAccountScreen() {
                         <AntDesign  name="phone" size={20} color="black" style={styles.icon} />
                         <TextInput
                             placeholder="Phone number"
+                            textContentType="none"
                             keyboardType="phone-pad"
                             style={styles.input}
                             onChangeText={SetNumber}

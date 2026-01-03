@@ -6,6 +6,9 @@ import { Car } from '../types/Car';
 import { useEffect } from 'react';
 import { userAuth } from '../context/AuthContext';
 import { Rental } from '../types/Rental';
+import {BASE_URL} from "../src/api";
+import {Ionicons} from "@expo/vector-icons";
+import { LinearGradient } from 'expo-linear-gradient';
 
 const screenwidth = Dimensions.get('window').width;
 
@@ -81,18 +84,34 @@ const ProfileHeader = () => {
   };
 
   const { logOut } = userAuth();
-
+  const { user } = userAuth();
+  const username = user?.username;
   return (
-    <View style={headerStyles.container}>
+    <View>
+    <View style={styles.row}>
       <TouchableOpacity onPress={onPressChangeProfilePicture}>
         <Image
           source={profileImageUri ? { uri: profileImageUri } : require("../assets/images/profilepictures/yaris.png")}
-          style={{ width: 200, height: 200, borderRadius: 100, marginTop: 20 }}
+          style={{ width: 150, height: 150, borderRadius: 50, marginTop: 0 , marginLeft: 10}}
         />
       </TouchableOpacity>
-      <View style={[headerStyles.button, { borderRadius: 100 }]}>
-        <Button title="Log Out" onPress={logOut} />
+      <View>
+
+      <View >
+        <Text style={[listStyles.name,{alignSelf: "center", marginLeft:10, marginTop: 35}]}>{username}</Text>
       </View>
+        <TouchableOpacity
+            style={[styles.button,{alignSelf: "center",marginLeft: 10. , marginTop: 50}]}
+            onPress={logOut}
+        >
+          <View style={styles.row}>
+            <Ionicons  name="exit-outline" size={20} color="black" style={styles.icon} />
+            <Text style={styles.buttonText}>Log Out</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    </View>
+      <Text style={[listStyles.name,{marginLeft:25,marginBottom:5}]}>My Rides</Text>
     </View>
 
   );
@@ -107,7 +126,8 @@ const RentedCars: React.FC = () => {
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/users/${username}/rentals`);
+        const response = await fetch(`${BASE_URL}/api/users/${username}/rentals`, {
+          method: 'GET', });
         const data = await response.json();
         setRentals(data);
       } catch (error) {
@@ -120,20 +140,31 @@ const RentedCars: React.FC = () => {
   const renderItem = ({ item }: { item: Rental }) => {
 
     const formattedDate = typeof item.rentalDate === 'string' ? item.rentalDate.substring(0, 10) : 'N/A';
-    console.log(item.image);
+    console.log("Rentals:", rentals);
+    console.log("item image:",item.imageUrl);
     return (
-      <View style={listStyles.card}>
-        <Image source={{ uri: item.image }} style={listStyles.image} />
+        <LinearGradient
+            colors={[ '#939393','#d3d3d3']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0.1 }}
+            style={{borderRadius:20,marginBottom: 20}}
+        >
+      <View style={[listStyles.container,{borderRadius: 30}]}>
+        <View style={styles.row}>
         <View style={listStyles.info}>
-          <Text style={listStyles.name}>{item.name}</Text>
-          <Text style={listStyles.model}>{item.model}</Text>
           <Text style={listStyles.location}>{formattedDate}</Text>
+          <Text style={listStyles.name}> {item.model} {item.name}</Text>
+          <Text style={listStyles.location}>{["€"+item.totalcost+" - "+item.days+" days"]}</Text>
+        </View>
+        <Image source={{ uri: item.imageUrl }} style={listStyles.image} />
         </View>
       </View>
+        </LinearGradient>
+
     );
   };
   return (
-    <View style={listStyles.outerContainer}>
+    <View style={listStyles.card}>
       <FlatList
         data={rentals}
         renderItem={renderItem}
@@ -141,7 +172,7 @@ const RentedCars: React.FC = () => {
         contentContainerStyle={listStyles.container}
         style={{ flex: 1 }} />
     </View>
-  )
+)
 };
 
 const headerStyles = StyleSheet.create({
@@ -152,6 +183,7 @@ const headerStyles = StyleSheet.create({
   button: {
     marginTop: 10,
     marginBottom: 10,
+    backgroundColor: '#0597D5',
   }
 });
 
@@ -159,29 +191,30 @@ const listStyles = StyleSheet.create({
   outerContainer: {
     width: screenwidth * 0.92,
     //height: screenwidth * 1.2,
-    alignSelf: 'center',
-    borderWidth: 1,
-    borderColor: '#ccc',
     borderRadius: 12,
     overflow: 'hidden',
     marginTop: 10,
-    backgroundColor: '#0597D5',
     flex: 1,
   },
   container: {
     paddingVertical: 10,
     paddingHorizontal: 5,
-
+    justifyContent: "center",
+    borderRadius: 5,
   },
   card: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
     marginVertical: 8,
-    marginHorizontal: 10,
+    marginHorizontal: 20,
     borderRadius: 8,
     overflow: 'hidden',
-    elevation: 2,
-
+    width: screenwidth - 40,
+    opacity: 0.85,
+    shadowColor: '#000',
+    shadowOpacity: 0.12,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 5
   },
   image: {
     width: 100,
@@ -190,18 +223,17 @@ const listStyles = StyleSheet.create({
   info: {
     flex: 1,
     padding: 10,
-    justifyContent: 'center',
   },
   name: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: 'bold',
   },
   model: {
-    fontSize: 14,
+    fontSize: 16,
     color: '#555',
   },
   location: {
-    fontSize: 14,
+    fontSize: 16,
     color: '#555',
   },
   price: {
@@ -212,6 +244,40 @@ const listStyles = StyleSheet.create({
     fontSize: 14,
     color: '#555',
   },
+  image: {
+    width: 150,
+    height: 75,
+  },
 });
 
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: "#fff",
+    alignSelf: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "#000",
+    borderRadius: 8,
+    marginVertical: 10,
+    paddingHorizontal: 20,
+    width: 200,
+    height: 50,
+    marginBottom: 20,
+  },
+  buttonText: {
+    color: "#000",
+    fontSize: 18,
+    alignSelf: "center",
+  },
+  icon: {
+    marginRight: 10,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 5,
+    marginRight: 15,
+  }
+});
 export default ProfileScreen;

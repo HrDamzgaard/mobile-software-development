@@ -10,6 +10,8 @@ import colors from '../src/theme/colors';
 import { typography } from '../src/theme/typography';
 import type { Car } from '../src/types';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { userAuth } from "../context/AuthContext";
 
 export default function CarDetails() {
   const route = useRoute();
@@ -70,7 +72,15 @@ export default function CarDetails() {
   const statusRaw = norm((car as any)?.status);
   const statusText = statusRaw || '';
 
+  const { user } = userAuth();
+  const username = user?.username;
+
+
   async function handleRent() {
+    const response = await fetch(`${BASE_URL}/api/rent/${car?.id}/${username}`, {
+      method: 'PUT', });
+    Alert.alert('Rented', 'Successfully rented.')
+    return;
     const s = statusRaw.toLowerCase();
     if (s && s !== 'available') {
       Alert.alert('Error', 'This car is not available to rent.');
@@ -78,7 +88,7 @@ export default function CarDetails() {
     }
     try {
       setRenting(true);
-      const data = await rentCar(id);
+      const data = await rentCar(id,username);
       const msg = (data && (data as any).message) ? (data as any).message : 'Successfully rented.';
       Alert.alert('Success', msg);
     } catch {
@@ -89,15 +99,9 @@ export default function CarDetails() {
 const navigation = useNavigation();
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
-      
-      {/* Go Back Button */}
-      <View style={styles.backRow}>
-        <Pressable
-          onPress={() => navigation.goBack()}
-          style={[styles.goBack, { backgroundColor: LIGHT, borderColor: LIGHT }]}
-        >
-          <Text style={styles.goBackText}>Go Back</Text>
-        </Pressable>
+
+      <View>
+
       </View>
 
       {/* Content */}

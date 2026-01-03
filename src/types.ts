@@ -7,5 +7,7 @@ export type Car = {
   price: number;
   currency: string;
   per: string;
-  status: string; 
+  status: string;
+  totalprice: number;
+  days: number;
 };

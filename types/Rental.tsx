@@ -4,10 +4,11 @@ export type Rental = {
     userId: string;
     rentalDate: string;
     returnDate: string;
-    totalPrice: number;
-    
     // Snapshot of car details at the time of rental
-    image: string;
+    imageUrl: string;
     name: string;
     model: string;
+    totalcost: number;
+    days: number;
+
 };

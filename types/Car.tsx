@@ -6,4 +6,6 @@ export type Car = {
   price: string;
   listingdate: string;
   image: string;
+  totalprice: number;
+  days: number;
 };
