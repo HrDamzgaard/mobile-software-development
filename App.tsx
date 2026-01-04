@@ -12,15 +12,19 @@ import LoginScreen from "./Screens/Login/LoginScreen";
 import ResetPasswordScreen from "./Screens/Login/ResetPasswordScreen";
 import HomeScreen from "./Screens/HomeScreen";
 import ProfileScreen from "./Screens/ProfileScreen";
+
 import { Poppins_400Regular, Poppins_600SemiBold, Poppins_700Bold } from '@expo-google-fonts/poppins';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
+
 import CarDetails from './Screens/CarDetails';
 import BookingConfirmation from './Screens/BookingConfirmation';
+import BookingHistoryScreen from './Screens/BookingHistoryScreen';
+
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 
 SplashScreen.preventAutoHideAsync();
-import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 
 const AuthStack = createNativeStackNavigator({
   screens: {
@@ -69,6 +73,13 @@ const AppDrawer = createDrawerNavigator({
       screen: BookingConfirmation,
       options: {
         title: ' Booking Confirmation ',
+        drawerItemStyle: { display: 'none' },
+      },
+    },
+    BookingHistory: {
+      screen: BookingHistoryScreen,
+      options: {
+        title: ' Booking History ',
         drawerItemStyle: { display: 'none' },
       },
     },
