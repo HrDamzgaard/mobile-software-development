@@ -145,6 +145,7 @@ const RentedCars: React.FC = () => {
   const username = user?.username;
 
   useEffect(() => {
+    if (!username) return;
     const fetchCars = async () => {
       try {
         const response = await fetch(
@@ -161,11 +162,9 @@ const RentedCars: React.FC = () => {
   };
 
   fetchCars();
-}, []);
+}, [username]);
 
 
-    fetchCars();
-  }, [username]);
 
 
   const renderItem = ({ item }: { item: Rental }) => {
